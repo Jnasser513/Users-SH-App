@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nasser.usersapp.classes.User
 import com.nasser.usersapp.databinding.ItemUserBinding
 
@@ -27,8 +29,14 @@ class UserAdapter(private val users: List<User>): RecyclerView.Adapter<UserAdapt
         val user = users.get(position)
 
         with(holder) {
-            binding.orderTextView.text = user.id.toString()
-            binding.nameTextView.text = user.name
+            binding.orderTextView.text = (position + 1).toString()
+            binding.nameTextView.text = user.getFullName()
+            Glide.with(context)
+                .load(user.url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .circleCrop()
+                .into(binding.cardImgPhoto)
         }
     }
 
