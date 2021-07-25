@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.nasser.usersapp.classes.User
 import com.nasser.usersapp.databinding.ActivityMainBinding
 
@@ -29,13 +30,25 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         Log.i("SP", "${getString(R.string.sp_first_time)} = $isFirstTime")
 
         if(isFirstTime) {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_register, null)
             MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_tittle)
+                .setView(dialogView)
+                .setCancelable(false)
                 .setPositiveButton(R.string.dialog_confirm, { dialog, which ->
-                    preference.edit().putBoolean(getString(R.string.sp_first_time), false).commit()
+                    val username = dialogView.findViewById<TextInputEditText>(R.id.user_name_input)
+                        .text.toString()
+                    with(preference.edit()){
+                        putBoolean(getString(R.string.sp_first_time), false)
+                        putString(getString(R.string.sp_username), username)
+                            .apply()
+                    }
+                    Toast.makeText(this, R.string.register_succes, Toast.LENGTH_SHORT).show()
                 })
-                .setNegativeButton("Cancelar", null)
                 .show()
+        } else {
+            val username = preference.getString(getString(R.string.sp_username), getString(R.string.hint_user_name))
+            Toast.makeText(this, "Bienvenido $username", Toast.LENGTH_SHORT).show()
         }
 
         userAdapter = UserAdapter(getUsers(), this)
