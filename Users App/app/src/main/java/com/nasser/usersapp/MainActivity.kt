@@ -1,12 +1,14 @@
 package com.nasser.usersapp
 
 import android.content.Context
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nasser.usersapp.classes.User
 import com.nasser.usersapp.databinding.ActivityMainBinding
 
@@ -25,6 +27,16 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         val isFirstTime = preference.getBoolean(getString(R.string.sp_first_time), true)
         Log.i("SP", "${getString(R.string.sp_first_time)} = $isFirstTime")
+
+        if(isFirstTime) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.dialog_tittle)
+                .setPositiveButton(R.string.dialog_confirm, { dialog, which ->
+                    preference.edit().putBoolean(getString(R.string.sp_first_time), false).commit()
+                })
+                .setNegativeButton("Cancelar", null)
+                .show()
+        }
 
         userAdapter = UserAdapter(getUsers(), this)
         linearLayoutManager = LinearLayoutManager(this)
