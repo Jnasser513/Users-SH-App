@@ -1,13 +1,16 @@
 package com.nasser.usersapp
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasser.usersapp.classes.User
 import com.nasser.usersapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var userAdapter: UserAdapter
     private lateinit var linearLayoutManager: RecyclerView.LayoutManager
 
@@ -18,10 +21,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userAdapter = UserAdapter(getUsers())
+        val preference = getPreferences(Context.MODE_PRIVATE)
+
+        val isFirstTime = preference.getBoolean(getString(R.string.sp_first_time), true)
+        Log.i("SP", "${getString(R.string.sp_first_time)} = $isFirstTime")
+
+        userAdapter = UserAdapter(getUsers(), this)
         linearLayoutManager = LinearLayoutManager(this)
 
         binding.usersRecyclerview.apply {
+            setHasFixedSize(true)
             layoutManager = linearLayoutManager
             adapter = userAdapter
         }
@@ -39,7 +48,23 @@ class MainActivity : AppCompatActivity() {
         users.add(adriana)
         users.add(andre)
         users.add(marcela)
+        users.add(jnasser)
+        users.add(adriana)
+        users.add(andre)
+        users.add(marcela)
+        users.add(jnasser)
+        users.add(adriana)
+        users.add(andre)
+        users.add(marcela)
+        users.add(jnasser)
+        users.add(adriana)
+        users.add(andre)
+        users.add(marcela)
 
         return users
+    }
+
+    override fun onClick(user: User, position: Int) {
+        Toast.makeText(this, "$position: ${user.getFullName()}" , Toast.LENGTH_SHORT).show()
     }
 }
